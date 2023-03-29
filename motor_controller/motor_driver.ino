@@ -1,8 +1,8 @@
 #include "motor_driver.h"
 
-// between -100 and 100
-static int8_t _left_speed{0};
-static int8_t _right_speed{0};
+// between -255 and 255
+static int16_t _left_speed{0};
+static int16_t _right_speed{0};
 
 // initialize motor pins and turn motors off
 void MotorDriver::initMotors()
@@ -20,14 +20,14 @@ void MotorDriver::initMotors()
     stopMotors();
 }
 
-// takes in a motor speed between -100 and 100, and sets motor pins accordingly
-// error code -1: a motor speed was outside the range of -100 to 100
+// takes in a motor speed between -255 and 255, and sets motor pins accordingly
+// error code -1: a motor speed was outside the range of -255 to 255
 // error code -2: invalid motor selection
 // TODO: how to deal with minimum real speeds (before stalling)
-int8_t MotorDriver::setMotorSpeed(MotorSelection motor, int8_t motor_speed)
+int8_t MotorDriver::setMotorSpeed(MotorSelection motor, int16_t motor_speed)
 {
-    // speed requests must be between -100 and 100
-    if (motor_speed > 100)
+    // speed requests must be between -255 and 255
+    if (motor_speed > 255 || motor_speed < -255)
     {
         return -1;
     }
@@ -64,20 +64,20 @@ int8_t MotorDriver::setMotorSpeed(MotorSelection motor, int8_t motor_speed)
         backward_pin = temp;
     }
 
-    analogWrite(speed_pin, map(motor_speed, 0, 100, 0, 255));
+    analogWrite(speed_pin, motor_speed);
     digitalWrite(forward_pin, HIGH);
     digitalWrite(backward_pin, LOW);
 
     return 0;
 }
 
-int8_t MotorDriver::setMotorSpeeds(int8_t left_motor_speed, int8_t right_motor_speed)
+int8_t MotorDriver::setMotorSpeeds(int16_t left_motor_speed, int16_t right_motor_speed)
 {
     setMotorSpeed(LEFT, left_motor_speed);
     setMotorSpeed(RIGHT, right_motor_speed);
 }
 
-int8_t MotorDriver::getMotorSpeed(MotorSelection motor)
+int16_t MotorDriver::getMotorSpeed(MotorSelection motor)
 {
     switch (motor)
     {
