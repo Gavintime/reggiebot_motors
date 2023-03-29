@@ -5,13 +5,13 @@ namespace MotorDriver
 {
     // L298N motor driver connections
     // Motor A
-    constexpr uint8_t left_motor_speed_pin{6}; // brown
-    constexpr uint8_t left_motor_forward_pin{7}; // yellow
-    constexpr uint8_t left_motor_backward_pin{8}; // orange
+    constexpr uint8_t left_motor_speed_pin{11}; // white
+    constexpr uint8_t left_motor_forward_pin{9}; // red
+    constexpr uint8_t left_motor_backward_pin{10}; // brown
     // Motor B
-    constexpr uint8_t right_motor_speed_pin{11}; // white
-    constexpr uint8_t right_motor_forward_pin{9}; // red
-    constexpr uint8_t right_motor_backward_pin{10}; // brown
+    constexpr uint8_t right_motor_speed_pin{6}; // brown
+    constexpr uint8_t right_motor_forward_pin{7}; // yellow
+    constexpr uint8_t right_motor_backward_pin{8}; // orange
 
     enum MotorSelection
     {
