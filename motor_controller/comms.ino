@@ -4,8 +4,9 @@
 
 void Comms::initComms()
 {
-    // init message array to all 0s
-    char message[max_message_length]{0};
+    // init message array to all 0s (\0)
+    // +1 is so that there is always a \0 at the end
+    char message[max_message_length + 1]{0};
     int8_t msg_index{0};
 
     // Serial.begin(9600);
@@ -43,7 +44,7 @@ void Comms::initComms()
 
                 msg_index = 0;
             }
-            // message length maxed out before receiving terminator (\n)
+            // message was maxed out before receiving terminator (\n)
             else if (msg_index >= max_message_length)
             {
                 msg_index = 0;
@@ -70,37 +71,16 @@ void _printMotorSpeeds()
 int8_t _setMotorSpeeds(const char *msg, int8_t end_index)
 {
 
-    if (msg[1] != ' ' || msg[6] != ' ' || end_index < 11)
+    // verify msg has required space and is large enough
+    if (msg[1] != ' ' || end_index < 5)
     {
         return -1;
     }
 
-    // TODO: allow for ommiting 100s and 10s place if 0 from message
-    int16_t left_speed{(msg[3] - 48) * 100 + (msg[4] - 48) * 10 + (msg[5] - 48)};
-    int16_t right_speed{(msg[8] - 48) * 100 + (msg[9] - 48) * 10 + (msg[10] - 48)};
-
-    if (left_speed > 255 || right_speed > 255)
-    {
-        return -2;
-    }
-
-    if (msg[2] == '-')
-    {
-        left_speed *= -1;
-    }
-    else if (msg[2] != '+')
-    {
-        return -3;
-    }
-
-    if (msg[7] == '-')
-    {
-        right_speed *= -1;
-    }
-    else if (msg[7] != '+')
-    {
-        return -3;
-    }
+    int16_t left_speed(atoi(msg + 2));
+    // get pointer to first ' ' char after the left speed,
+    // which will be just before the right speed
+    int16_t right_speed(atoi(strchr(msg + 3, ' ') + 1));
 
     MotorDriver::setMotorSpeeds(left_speed, right_speed);
     return 0;
