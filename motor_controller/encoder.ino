@@ -46,6 +46,12 @@ void _readEncoder(uint8_t encoder_b_pin, int &encoder_counter)
 int Encoder::getLeftCount() { return _left_count; }
 int Encoder::getRightCount() { return _right_count; }
 
+void Encoder::resetEncoders()
+{
+    _left_count = 0;
+    _right_count = 0;
+}
+
 // Sends linear velocities(x,y) and orientation(yaw) over serial
 void Encoder::sendOdomOverSerial()
 {

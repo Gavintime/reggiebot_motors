@@ -21,6 +21,7 @@ namespace Encoder
     void initEncoders();
     int getLeftCount();
     int getRightCount();
+    void resetEncoders();
     void sendOdomOverSerial();
 
 }
