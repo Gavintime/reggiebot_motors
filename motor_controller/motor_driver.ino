@@ -98,4 +98,6 @@ void MotorDriver::stopMotors()
     digitalWrite(left_motor_backward_pin, LOW);
     digitalWrite(right_motor_forward_pin, LOW);
     digitalWrite(right_motor_backward_pin, LOW);
+    _left_speed = 0;
+    _right_speed = 0;
 }
