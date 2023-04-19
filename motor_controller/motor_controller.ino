@@ -12,5 +12,17 @@ void setup()
 
 void loop()
 {
-    Comms::initComms();
+    static auto previous_time{millis()};
+    static constexpr auto odom_interval{(1 / (double)60) * 1000};
+
+    Comms::runCommsIteration();
+
+    const auto current_time{millis()};
+
+    // run odom at 60hz
+    if (current_time - previous_time > odom_interval)
+    {
+        previous_time = current_time;
+        Encoder::runOdomIteration();
+    }
 }
