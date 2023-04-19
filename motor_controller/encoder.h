@@ -10,7 +10,7 @@ namespace Encoder
     // TODO: measure this
     constexpr auto wheel_gap{200}; // guesstimated 8 inches for now
     constexpr double wheel_circumference{204.2}; // 65mm diameter * pi
-    constexpr int counts_per_meter{encoder_ppr/wheel_circumference * 1000}; // 3986
+    constexpr int counts_per_meter{encoder_ppr/wheel_circumference * 1000};
 
     // A pins must support interrupts (pins 2 and 3 on nano)
     constexpr uint8_t left_encoder_a_pin{2}; // green
@@ -22,7 +22,8 @@ namespace Encoder
     int getLeftCount();
     int getRightCount();
     void resetEncoders();
-    void sendOdomOverSerial();
+    void runOdomIteration();
+    void SendOdomInfo();
 
 }
 #endif
