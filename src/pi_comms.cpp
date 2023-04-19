@@ -14,7 +14,7 @@ std::string getCommandFromUser()
 int main()
 {
     // connect to arduino over serial port and set serial parameters
-    LibSerial::SerialPort arduino_port("/dev/ttyUSB0");
+    LibSerial::SerialPort arduino_port("/dev/arduino-motor");
     arduino_port.SetBaudRate(LibSerial::BaudRate::BAUD_9600);
     arduino_port.SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
     arduino_port.SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
@@ -27,7 +27,7 @@ int main()
         arduino_port.Write(command + '\n');
 
         // get response if get encoder count or get motor speed command
-        if (command[0] == 'r' || command[0] == 'g')
+        if (command[0] == 'r' || command[0] == 'g' || command[0] == 'o')
         {
             std::string response;
             arduino_port.ReadLine(response, '\n');
