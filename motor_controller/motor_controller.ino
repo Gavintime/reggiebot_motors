@@ -23,6 +23,6 @@ void loop()
     if (current_time - previous_time > odom_interval)
     {
         previous_time = current_time;
-        Encoder::runOdomIteration();
+        Encoder::calculateSpeeds();
     }
 }
