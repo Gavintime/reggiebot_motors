@@ -2,54 +2,51 @@
 #include "encoder.h"
 #include "comms.h"
 
-void Comms::initComms()
+void Comms::runCommsIteration()
 {
     // init message array to all 0s (\0)
     // +1 is so that there is always a \0 at the end
-    char message[max_message_length + 1]{0};
-    int8_t msg_index{0};
+    static char message[max_message_length + 1]{0};
+    static int8_t msg_index{0};
 
-    // Serial.begin(9600);
-
-    while (true)
+    // message received from pi
+    if (Serial.available())
     {
-        // message received from pi
-        if (Serial.available())
+        char c{Serial.read()};
+        message[msg_index++] = c;
+
+        // terminator found, end of message
+        if (c == '\n')
         {
-            // auto msg{Serial.readStringUntil('\n')};
-            char c{Serial.read()};
-            message[msg_index++] = c;
-
-            // terminator found, end of message
-            if (c == '\n')
+            switch (message[0])
             {
-                switch (message[0])
-                {
-                case read_encoders:
-                    _printEncoders();
-                    break;
-                case reset_encoders:
-                    Encoder::resetEncoders();
-                    break;
-                case stop_motors:
-                    MotorDriver::stopMotors();
-                    break;
-                case set_motor_speeds:
-                    _setMotorSpeeds(message, msg_index);
-                    break;
-                case get_motor_speeds:
-                    _printMotorSpeeds();
-                    break;
-                }
+            case read_encoders:
+                _printEncoders();
+                break;
+            case reset_encoders:
+                Encoder::resetEncoders();
+                break;
+            case stop_motors:
+                MotorDriver::stopMotors();
+                break;
+            case set_motor_speeds:
+                _setMotorSpeeds(message, msg_index);
+                break;
+            case get_motor_speeds:
+                _printMotorSpeeds();
+                break;
+            case get_odom:
+                Encoder::SendOdomInfo();
+                break;
+            }
 
-                msg_index = 0;
-            }
-            // message was maxed out before receiving terminator (\n)
-            else if (msg_index >= max_message_length)
-            {
-                msg_index = 0;
-                Serial.println("ERROR, TERMINATOR EXPECTED");
-            }
+            msg_index = 0;
+        }
+        // message was maxed out before receiving terminator (\n)
+        else if (msg_index >= max_message_length)
+        {
+            msg_index = 0;
+            Serial.println("ERROR, TERMINATOR EXPECTED");
         }
     }
 }
