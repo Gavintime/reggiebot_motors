@@ -14,6 +14,7 @@ namespace Comms
     constexpr char set_motor_powers{'s'}; // s +255 +255
     constexpr char get_motor_powers{'g'};
     constexpr char get_motor_speeds{'o'};
+    constexpr char set_motor_speeds{'c'}; // c +200 +200, in rpm
 
     void runCommsIteration();
 }

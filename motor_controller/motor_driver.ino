@@ -71,7 +71,7 @@ int8_t MotorDriver::setMotorPower(MotorSelection motor, int16_t motor_power)
     return 0;
 }
 
-int8_t MotorDriver::setMotorPower(int16_t left_motor_power, int16_t right_motor_power)
+int8_t MotorDriver::setMotorPowers(int16_t left_motor_power, int16_t right_motor_power)
 {
     setMotorPower(LEFT, left_motor_power);
     setMotorPower(RIGHT, right_motor_power);

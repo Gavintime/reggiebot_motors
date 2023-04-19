@@ -22,7 +22,7 @@ namespace MotorDriver
     void initMotors();
     // motors may stall below 20% power, confirmed stalling at 10% power
     int8_t setMotorPower(MotorSelection motor, int16_t motor_power);
-    int8_t setMotorPower(int16_t left_motor_power, int16_t right_motor_power);
+    int8_t setMotorPowers(int16_t left_motor_power, int16_t right_motor_power);
     int16_t getMotorPower(MotorSelection motor);
     void stopMotors();
 

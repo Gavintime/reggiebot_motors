@@ -4,14 +4,9 @@
 
 namespace Encoder
 {
-    // all lengths are in millimeters except counts per meter
 
     // 75:1 gear ratio, 11 ppr (spec sheet), 75*11=825
     constexpr auto encoder_ppr{75 * 11};
-    // TODO: measure this
-    constexpr auto wheel_gap{200};                   // guesstimated 8 inches for now
-    constexpr double wheel_circumference{65 * M_PI}; // 65mm diameter * pi
-    constexpr int counts_per_meter{encoder_ppr / wheel_circumference * 1000};
 
     // A pins must support interrupts (pins 2 and 3 on nano)
     constexpr uint8_t left_encoder_a_pin{2};  // green
@@ -22,8 +17,8 @@ namespace Encoder
     void initEncoders();
     int getLeftCount();
     int getRightCount();
-    int getLeftSpeed();
-    int getRightSpeed();
+    int getLeftRPM();
+    int getRightRPM();
     void resetEncoders();
     void calculateSpeeds();
     void printSpeedInfo();

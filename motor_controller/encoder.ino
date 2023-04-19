@@ -1,14 +1,14 @@
 #include <math.h> // fmod and M_PI
 #include "encoder.h"
 
-static int _left_count{0};
-static int _right_count{0};
+volatile static int _left_count{0};
+volatile static int _right_count{0};
 // static double _yaw{0};
-// in mm per second
+// in rpm
 // static double _Vx{0};
 // static double _Vy{0};
-static int _Vleft{0};
-static int _Vright{0};
+static int _left_rpm{0};
+static int _right_rpm{0};
 
 void Encoder::initEncoders()
 {
@@ -35,7 +35,7 @@ void Encoder::initEncoders()
 }
 
 // ISR to update encoder count value based on direction (if b pin is high or not)
-void _readEncoder(uint8_t encoder_b_pin, int &encoder_counter)
+void _readEncoder(uint8_t encoder_b_pin, volatile int &encoder_counter)
 {
     if (digitalRead(encoder_b_pin))
     {
@@ -51,8 +51,8 @@ void _readEncoder(uint8_t encoder_b_pin, int &encoder_counter)
 
 int Encoder::getLeftCount() { return _left_count; }
 int Encoder::getRightCount() { return _right_count; }
-int Encoder::getLeftSpeed() { return _Vleft; }
-int Encoder::getRightSpeed() { return _Vright; }
+int Encoder::getLeftRPM() { return _left_rpm; }
+int Encoder::getRightRPM() { return _right_rpm; }
 
 void Encoder::resetEncoders()
 {
@@ -64,21 +64,20 @@ void Encoder::resetEncoders()
 void Encoder::calculateSpeeds()
 {
     // TODO: disable interrupts, or copy left/right pos at start etc
-    static auto previous_time{millis()};
+    static auto previous_time{micros()};
     static auto previous_left_count{_left_count};
     static auto previous_right_count{_right_count};
 
-    auto current_time{millis()};
+    const auto current_time{micros()};
 
     // calculate deltas
-    // time is in secs, distance is in mm
-    auto dt{(current_time - previous_time) / (double)1000};
-    int dleft{((_left_count - previous_left_count) / (double)counts_per_meter) * 1000};
-    int dright{((_right_count - previous_right_count) / (double)counts_per_meter) * 1000};
+    auto dt{((current_time - previous_time) / 1.0e6) / 60};
+    auto dleft{(_left_count - previous_left_count) / (double)encoder_ppr};
+    auto dright{(_right_count - previous_right_count) / (double)encoder_ppr};
 
-    // calculate wheel velocities
-    _Vleft = dleft / dt;
-    _Vright = dright / dt;
+    // calculate wheel velocities in rpm
+    _left_rpm = dleft / dt;
+    _right_rpm = dright / dt;
 
     // prevent encoder counters from overflowing
     // TODO: review this
@@ -92,8 +91,7 @@ void Encoder::calculateSpeeds()
 
 void Encoder::printSpeedInfo()
 {
-    Serial.print(_Vleft);
+    Serial.print(_left_rpm);
     Serial.print(' ');
-    Serial.println(_Vright);
-
+    Serial.println(_right_rpm);
 }

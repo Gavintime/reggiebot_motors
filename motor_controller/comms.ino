@@ -1,5 +1,6 @@
 #include "motor_driver.h"
 #include "encoder.h"
+#include "motor_controller.h"
 #include "comms.h"
 
 void Comms::runCommsIteration()
@@ -27,6 +28,7 @@ void Comms::runCommsIteration()
                 Encoder::resetEncoders();
                 break;
             case stop_motors:
+                MotorController::disableClosedLoopControl();
                 MotorDriver::stopMotors();
                 break;
             case set_motor_powers:
@@ -37,6 +39,9 @@ void Comms::runCommsIteration()
                 break;
             case get_motor_speeds:
                 Encoder::printSpeedInfo();
+                break;
+            case set_motor_speeds:
+                _setMotorSpeeds(message, msg_index);
                 break;
             }
 
@@ -79,7 +84,25 @@ int8_t _setMotorPowers(const char *msg, int8_t end_index)
     // which will be just before the right power
     int16_t right_power(atoi(strchr(msg + 3, ' ') + 1));
 
-    MotorDriver::setMotorPower(left_power, right_power);
+    MotorController::disableClosedLoopControl();
+    MotorDriver::setMotorPowers(left_power, right_power);
+    return 0;
+}
+
+int8_t _setMotorSpeeds(const char *msg, int8_t end_index)
+{
+    // verify msg has required space and is large enough
+    if (msg[1] != ' ' || end_index < 5)
+    {
+        return -1;
+    }
+
+    int16_t left_speed(atoi(msg + 2));
+    // get pointer to first ' ' char after the left speed,
+    // which will be just before the right speed
+    int16_t right_speed(atoi(strchr(msg + 3, ' ') + 1));
+
+    MotorController::setMotorSpeeds(left_speed, right_speed);
     return 0;
 }
 
