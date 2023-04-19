@@ -11,11 +11,9 @@ namespace Comms
 
     // motor commands
     constexpr char stop_motors{'e'};
-    constexpr char set_motor_speeds{'s'}; // s +255 +255
-    constexpr char get_motor_speeds{'g'};
-
-    // odom commands
-    constexpr char get_odom{'o'};
+    constexpr char set_motor_powers{'s'}; // s +255 +255
+    constexpr char get_motor_powers{'g'};
+    constexpr char get_motor_speeds{'o'};
 
     void runCommsIteration();
 }

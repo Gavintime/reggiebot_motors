@@ -29,14 +29,14 @@ void Comms::runCommsIteration()
             case stop_motors:
                 MotorDriver::stopMotors();
                 break;
-            case set_motor_speeds:
-                _setMotorSpeeds(message, msg_index);
+            case set_motor_powers:
+                _setMotorPowers(message, msg_index);
+                break;
+            case get_motor_powers:
+                _printMotorPowers();
                 break;
             case get_motor_speeds:
-                _printMotorSpeeds();
-                break;
-            case get_odom:
-                Encoder::SendOdomInfo();
+                Encoder::printSpeedInfo();
                 break;
             }
 
@@ -58,14 +58,14 @@ void _printEncoders()
     Serial.println(Encoder::getRightCount());
 }
 
-void _printMotorSpeeds()
+void _printMotorPowers()
 {
-    Serial.print(MotorDriver::getMotorSpeed(MotorDriver::LEFT));
+    Serial.print(MotorDriver::getMotorPower(MotorDriver::LEFT));
     Serial.print(' ');
-    Serial.println(MotorDriver::getMotorSpeed(MotorDriver::RIGHT));
+    Serial.println(MotorDriver::getMotorPower(MotorDriver::RIGHT));
 }
 
-int8_t _setMotorSpeeds(const char *msg, int8_t end_index)
+int8_t _setMotorPowers(const char *msg, int8_t end_index)
 {
 
     // verify msg has required space and is large enough
@@ -74,12 +74,12 @@ int8_t _setMotorSpeeds(const char *msg, int8_t end_index)
         return -1;
     }
 
-    int16_t left_speed(atoi(msg + 2));
-    // get pointer to first ' ' char after the left speed,
-    // which will be just before the right speed
-    int16_t right_speed(atoi(strchr(msg + 3, ' ') + 1));
+    int16_t left_power(atoi(msg + 2));
+    // get pointer to first ' ' char after the left power,
+    // which will be just before the right power
+    int16_t right_power(atoi(strchr(msg + 3, ' ') + 1));
 
-    MotorDriver::setMotorSpeeds(left_speed, right_speed);
+    MotorDriver::setMotorPower(left_power, right_power);
     return 0;
 }
 
