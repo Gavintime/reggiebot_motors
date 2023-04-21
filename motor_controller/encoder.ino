@@ -1,12 +1,7 @@
-#include <math.h> // fmod and M_PI
 #include "encoder.h"
 
 volatile static int _left_count{0};
 volatile static int _right_count{0};
-// static double _yaw{0};
-// in rpm
-// static double _Vx{0};
-// static double _Vy{0};
 static int _left_rpm{0};
 static int _right_rpm{0};
 
@@ -76,13 +71,9 @@ void Encoder::calculateSpeeds()
     auto dright{(_right_count - previous_right_count) / (double)encoder_ppr};
 
     // calculate wheel velocities in rpm
-    _left_rpm = dleft / dt;
-    _right_rpm = dright / dt;
+    _left_rpm = round(dleft / dt);
+    _right_rpm = round(dright / dt);
 
-    // prevent encoder counters from overflowing
-    // TODO: review this
-    // _left_count %= encoder_ppr;
-    // _right_count %= encoder_ppr;
     // update info for next iteration
     previous_time = current_time;
     previous_left_count = _left_count;
