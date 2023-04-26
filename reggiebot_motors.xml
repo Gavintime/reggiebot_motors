@@ -1,0 +1,12 @@
+<library path="reggiebot_motors">
+
+  <!-- type and base_class_type correspond to PLUGINLIB_EXPORT_CLASSs parameters -->
+  <class name="reggiebot_motors/ReggiebotWheelInterface"
+    type="reggiebot_motors::ReggiebotWheelInterface"
+    base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The component (arduino) used to control the two wheels on Reggiebot.
+    </description>
+  </class>
+
+</library>

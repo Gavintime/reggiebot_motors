@@ -3,7 +3,7 @@
 <package format="3">
   <name>reggiebot_motors</name>
   <version>0.0.0</version>
-  <description>A serial interface to control the wheel motors on ReggieBot</description>
+  <description>The hardware interface to control the wheel motors on ReggieBot</description>
   <maintainer email="none@none.com">Gavin</maintainer>
   <license>MIT</license>
 
@@ -11,8 +11,14 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_add_gmock</test_depend>
+  <test_depend>hardware_interface</test_depend>
 
   <depend>libserial-dev</depend>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
