@@ -13,11 +13,6 @@ namespace reggiebot_motors
     using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
     /// Initialization of the hardware interface from data parsed from the robot's URDF.
-    /**
-     * \param[in] hardware_info structure with data from URDF.
-     * \returns CallbackReturn::SUCCESS if required data are provided and can be parsed.
-     * \returns CallbackReturn::ERROR if any error happens or data are missing.
-     */
     CallbackReturn ReggiebotWheelInterface::on_init(
         const hardware_interface::HardwareInfo &hardware_info)
     {
@@ -93,12 +88,6 @@ namespace reggiebot_motors
         const rclcpp_lifecycle::State & /*previous_state*/)
     {
         // setup communication to hardware so it can be activated
-        m_arduino_port->SetBaudRate(LibSerial::BaudRate::BAUD_9600);
-        m_arduino_port->SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
-        m_arduino_port->SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
-        m_arduino_port->SetParity(LibSerial::Parity::PARITY_NONE);
-        m_arduino_port->SetStopBits(LibSerial::StopBits::STOP_BITS_1);
-
         return CallbackReturn::SUCCESS;
     }
 
@@ -114,6 +103,15 @@ namespace reggiebot_motors
     {
         // TODO: catch exception and return error
         m_arduino_port->Open(m_arduino_file);
+        // these must happen after the port is opened
+        m_arduino_port->SetBaudRate(LibSerial::BaudRate::BAUD_9600);
+        m_arduino_port->SetCharacterSize(LibSerial::CharacterSize::CHAR_SIZE_8);
+        m_arduino_port->SetFlowControl(LibSerial::FlowControl::FLOW_CONTROL_NONE);
+        m_arduino_port->SetParity(LibSerial::Parity::PARITY_NONE);
+        m_arduino_port->SetStopBits(LibSerial::StopBits::STOP_BITS_1);
+
+        // allow the arduino enough time to start
+        sleep(2);
 
         RCLCPP_INFO(rclcpp::get_logger("ReggiebotWheelInterface"),
                     "Wheel controller successfully activated!");
