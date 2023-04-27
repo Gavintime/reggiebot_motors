@@ -38,7 +38,7 @@ void Comms::runCommsIteration()
                 _printMotorPowers();
                 break;
             case get_motor_speeds:
-                Encoder::printSpeedInfo();
+                MotorController::printSpeedInfo();
                 break;
             case set_motor_speeds:
                 _setMotorSpeeds(message, msg_index);

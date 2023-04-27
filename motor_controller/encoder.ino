@@ -80,9 +80,3 @@ void Encoder::calculateSpeeds()
     previous_right_count = _right_count;
 }
 
-void Encoder::printSpeedInfo()
-{
-    Serial.print(_left_rpm);
-    Serial.print(' ');
-    Serial.println(_right_rpm);
-}

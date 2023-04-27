@@ -62,8 +62,9 @@ int8_t MotorController::setMotorSpeeds(int16_t left_speed, int16_t right_speed)
         _right_integral = 0;
     }
 
-    _target_left_speed = left_speed;
-    _target_right_speed = right_speed;
+    // TODO: set these to measured limits
+    _target_left_speed = min(max(left_speed, 255), -255);
+    _target_right_speed = min(max(right_speed, 255), -255);
     return 0;
 }
 
@@ -108,4 +109,22 @@ void runPIDIteration()
     _previous_time = current_time;
     _prev_left_rpm = left_rpm;
     _prev_right_rpm = right_rpm;
+}
+
+void MotorController::printSpeedInfo()
+{
+
+    if (_closed_loop_control)
+    {
+        Serial.print(_left_rpm_filtered);
+        Serial.print(' ');
+        Serial.println(_right_rpm_filtered);
+    }
+    else
+    {
+        // doubles to match output of closed loop info above
+        Serial.print((double)Encoder::getLeftRPM());
+        Serial.print(' ');
+        Serial.println((double)Encoder::getRightRPM());
+    }
 }
