@@ -35,6 +35,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 # lib dir)
 find_library(LIBSERIAL serial REQUIRED)
 add_library(reggiebot_motors SHARED include/reggiebot_motors/reggiebot_wheel_interface.cpp)
+target_link_libraries(reggiebot_motors PUBLIC ${LIBSERIAL})
 
 # set(LIBSERIAL_INCLUDE_DIR /usr/include/libserial)
 
@@ -56,6 +57,7 @@ ament_target_dependencies(reggiebot_motors PUBLIC hardware_interface)
 ament_target_dependencies(reggiebot_motors PUBLIC pluginlib)
 ament_target_dependencies(reggiebot_motors PUBLIC rclcpp)
 ament_target_dependencies(reggiebot_motors PUBLIC rclcpp_lifecycle)
+# ament_target_dependencies(reggiebot_motors PUBLIC ${LIBSERIAL})
 
 # export hardware plugin
 pluginlib_export_plugin_description_file(hardware_interface reggiebot_motors.xml)
