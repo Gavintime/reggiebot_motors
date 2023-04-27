@@ -1,12 +1,13 @@
 #ifndef REGGIEBOT_WHEEL_INTERFACE_HPP
 #define REGGIEBOT_WHEEL_INTERFACE_HPP
 
-#include <memory>
+#include <libserial/SerialPort.h>
 #include "hardware_interface/system_interface.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
+#include <memory>
 #include <array>
 
 namespace reggiebot_motors
